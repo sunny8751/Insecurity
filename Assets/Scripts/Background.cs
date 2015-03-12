@@ -3,9 +3,9 @@ using System.Collections;
 
 public class Background : MonoBehaviour
 {
-		float interval;
+		public static float interval;
 		// the two background gameobjects
-		public GameObject[] backgrounds;
+		public static GameObject[] backgrounds;
 		Transform playerTransform;
 		float width;
 
@@ -18,27 +18,12 @@ public class Background : MonoBehaviour
 		playerTransform = GameObject.FindWithTag ("Player").transform;
 	}
 		
-		public void Init (bool scroll, string filename)
+		public static void Init ()
 		{
-		Information.scrollable = scroll;
-		Sprite newSprite = Resources.Load<Sprite>("Sprites/"+filename);
-		float spriteWidth = newSprite.bounds.size.x;
 		if(Information.scrollable){
-		foreach(GameObject b in backgrounds){
-				b.SetActive(true);
-			b.GetComponent<SpriteRenderer>().sprite = newSprite;
-				b.transform.localScale = new Vector3(width/spriteWidth,width/spriteWidth,1);
-		}
 				interval = backgrounds [0].GetComponent<SpriteRenderer> ().sprite.bounds.size.x;
 				backgrounds [0].transform.position = new Vector3 (-interval, 0, 0);
 				backgrounds [2].transform.position = new Vector3 (interval, 0, 0);
-		}else{
-			//not Information.scrollable
-			//set other backgrounds not active
-			backgrounds[1].SetActive(false);
-			backgrounds[2].SetActive(false);
-			backgrounds[0].GetComponent<SpriteRenderer>().sprite = newSprite;
-			backgrounds[0].transform.localScale = new Vector3(width/spriteWidth,width/spriteWidth,1);
 		}
 	}
 
