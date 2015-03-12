@@ -17,15 +17,22 @@ public class Player : MonoBehaviour {
 		// left and right movement
 		if(Input.GetKey(KeyCode.RightArrow)){
 			transform.transform.position += Vector3.right*speed*Time.deltaTime;
+			if(Information.scrollable){
+			Camera.main.transform.position += Vector3.right*speed*Time.deltaTime;
+			}
 		} else if(Input.GetKey(KeyCode.LeftArrow)){
 			transform.transform.position += Vector3.left*speed*Time.deltaTime;
+			if(Information.scrollable){
+			Camera.main.transform.position += Vector3.left*speed*Time.deltaTime;
+			}
 		}
 		// player wants to jump
 		if(Input.GetKeyDown(KeyCode.Space)){
 			//check to see if the player is on the ground
 			//use a raycast
 
-			rigidbody2D.AddForce(Vector2.up*jumpSpeed);
+			//jump
+			rigidbody2D.AddForce(Vector2.up*jumpSpeed*Information.jumpScale);
 		}
 	}
 }
