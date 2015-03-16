@@ -22,12 +22,16 @@ public class Manager : MonoBehaviour {
 		for(int i =0; i<backgrounds.Length; i++){
 			backgrounds[i].SetActive(false);
 		}
+		for(int i =0; i<foregrounds.Length; i++){
+			foregrounds[i].SetActive(false);
+		}
 		Information.level = l;
 		if(l==1){
 			playerTransform.position = new Vector3(0,-3,0);
 			Information.scrollable = false;
 			Information.jumpScale = 1.1f;
 			backgrounds[0].SetActive(true);
+			foregrounds[0].SetActive(true);
 		}else if(l==2){
 			playerTransform.position = new Vector3(0,-1,0);
 			Information.scrollable = true;
@@ -35,7 +39,7 @@ public class Manager : MonoBehaviour {
 			Background.backgrounds = new GameObject[]{backgrounds[1],backgrounds[2],backgrounds[3]};
 			Background.Init();
 			//make sky's ground active
-			foregrounds[0].SetActive(true);
+			foregrounds[1].SetActive(true);
 			Information.jumpScale = 1.1f;
 			backgrounds[1].SetActive(true);
 			backgrounds[2].SetActive(true);

@@ -49,6 +49,7 @@
      <Compile Include="Assets\Scripts\Background.cs" />
      <Compile Include="Assets\Scripts\Information.cs" />
      <Compile Include="Assets\Scripts\Manager.cs" />
+     <Compile Include="Assets\Scripts\Platform.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
