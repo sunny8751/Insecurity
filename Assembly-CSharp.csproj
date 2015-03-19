@@ -46,11 +46,12 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Background.cs" />
      <Compile Include="Assets\Scripts\Information.cs" />
-     <Compile Include="Assets\Scripts\Manager.cs" />
+     <Compile Include="Assets\Scripts\Level 1\Background.cs" />
+     <Compile Include="Assets\Scripts\Level 1\Player.cs" />
+     <Compile Include="Assets\Scripts\Level 2\Background2.cs" />
+     <Compile Include="Assets\Scripts\Level 2\Player2.cs" />
      <Compile Include="Assets\Scripts\Platform.cs" />
-     <Compile Include="Assets\Scripts\Player.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
