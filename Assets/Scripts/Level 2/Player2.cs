@@ -71,6 +71,10 @@ public class Player2 : MonoBehaviour
 			}
 		}
 
+		if(Input.GetKeyDown(KeyCode.Q)){
+			Application.Quit();
+		}
+
 		if(Input.GetKeyDown(KeyCode.A)){
 			Application.LoadLevel(Application.loadedLevel+1);
 		}
@@ -102,6 +106,14 @@ public class Player2 : MonoBehaviour
 		//if in front of door
 		if(other.tag == "Door"){
 			command = "open door";
+		}
+	}
+	
+	void OnTriggerExit2D(Collider2D other)
+	{
+		//if in front of door
+		if(other.tag == "Door"){
+			command = "";
 		}
 	}
 
