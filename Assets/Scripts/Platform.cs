@@ -7,11 +7,11 @@ public class Platform : MonoBehaviour {
 	
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		platform.isTrigger = true;
+		platform.enabled = false;
 	}
 	
 	void OnTriggerExit2D(Collider2D other)
 	{
-		platform.isTrigger = false;
+		platform.enabled = true;
 	}
 }
