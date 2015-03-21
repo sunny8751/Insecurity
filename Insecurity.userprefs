@@ -1,10 +1,9 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Player.cs">
     <Files>
-      <File FileName="Assets\Scripts\Player.cs" Line="223" Column="165" />
-      <File FileName="..\..\..\..\..\Unity3D\PathFinder\Assets\Scripts\MainMenu.cs" Line="83" Column="3" />
-      <File FileName="Assets\Scripts\Clothes.cs" Line="22" Column="68" />
+      <File FileName="Assets\Scripts\Player.cs" Line="223" Column="16" />
+      <File FileName="Assets\Scripts\Clothes.cs" Line="16" Column="16" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
