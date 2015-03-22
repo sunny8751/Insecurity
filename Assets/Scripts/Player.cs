@@ -25,7 +25,8 @@ public class Player : MonoBehaviour
 				playerSizeY = GetComponent<SpriteRenderer> ().sprite.bounds.size.y * transform.localScale.y;
 				layerMask = ~layerMask;
 				scale = new Vector3 (Screen.width / width, Screen.height / height, 1);
-				style = new GUIStyle ();
+		style = new GUIStyle ();
+		decisions.Add (action);
 				changeLevel (Application.loadedLevel);
 				Debug.Log ("crying");
 		StartCoroutine ("Wait", .5f);
@@ -267,12 +268,17 @@ public class Player : MonoBehaviour
 						text = story [storyIndex];
 					} else if (storyIndex == 104) {
 						if((int)decisions[1]==2){
-						//if has a cat inside
-						storyIndex = 105;
+							//if has a cat inside
+							storyIndex = 105;
 						}else{
 							storyIndex = 111;
 						}
 						text = story [storyIndex];
+					} else if (storyIndex == 111) {
+						//cat got someone's attention
+						//cutscene where adults walk in
+						cutscene = true;
+						StartCoroutine("Adults");
 					} else {
 												next ();
 										}
@@ -438,7 +444,7 @@ public class Player : MonoBehaviour
 		"Bully: What happened? Are you ok?",
 		"Me: No. I fell in this puddle and broke my prosthetic leg. I don't think I can move anywhere... Stupid leg!",
 		"Bully: What's wrong with it?",
-		"Me: Every one always makes fun of me! I’m no pirate! It’s not like I wanted a peg leg! I can’t play like everyone else!",
+		"Me: Every one always makes fun of me! I’m no pirate! It’s not like I wanted a peg leg! I can’t play like everyone\nelse!",
 		"Bully: I’m… Sorry. I actually thought it was really cool, but I never had the courage to tell you. I mean, it is like you\nhave a piece of iron man on you. Guess I was pretty jealous.",
 		"Me: ... … ...Thanks. That’s the first time someone was nice about my leg.",
 		"Unknown adult: HELLOOOO! ANYONE THERE??",
@@ -451,7 +457,8 @@ public class Player : MonoBehaviour
 		"italics",
 		"Takes out the cat and puts the cat on the ground",
 		"normal",
-		"Cat: MEEEEEOOOOOOWWWWWWWWWWW! MEEEEOOOOWWW! MEEEOOWW!"
+		"Cat: MEEEEEOOOOOOWWWWWWWWWWW! MEEEEOOOOWWW! MEEEOOWW!",//111
+		""
 	};
 		//_______________________________________________________________________________
 	
@@ -478,12 +485,14 @@ public class Player : MonoBehaviour
 			text = story[storyIndex];
 			pause = true;
 			prompting = false;
-			if((int)decisions[1]!=2){
-				GameObject.FindWithTag("Cat").GetComponent<SpriteRenderer>().enabled = true;
-			}
 						cameraExtent = 9.83f;
 			transform.localRotation = Quaternion.Euler(0,180,0);
-						transform.position = new Vector3 (-17.4f, -2.8f, 0);
+			transform.position = new Vector3 (-17.4f, -2.8f, 0);
+			/*
+			if((int)decisions[1]==2){
+				GameObject.FindWithTag("Cat").GetComponent<SpriteRenderer>().enabled = false;
+			}
+			*/
 				}
 		
 				Camera.main.transform.position = new Vector3 (-cameraExtent, 0, -10);
@@ -602,7 +611,7 @@ public class Player : MonoBehaviour
 				if (other.tag == "Door") {
 						if (storyIndex == 20) {
 								storyIndex = 21;
-			} else if (storyIndex == 32) {
+			} else if (storyIndex == 32||storyIndex == 61) {
 				storyIndex = 35;
 			} else if (storyIndex == 67) {
 				storyIndex = 68;
@@ -686,13 +695,28 @@ public class Player : MonoBehaviour
 		text = story[storyIndex];
 		cutscene = false;
 	}
+
+	IEnumerator Adults (){
+		float time = 0;
+		Transform adults = GameObject.FindWithTag("Adult").transform;
+		while(time<1f){
+			float pos = Mathf.Lerp(.3f,-13.5f,time/1f);
+			adults.position = new Vector3(pos, -2.59f, 0);
+			time += Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+		//bully done approaching you
+		storyIndex = 112;
+		text = story[storyIndex];
+		cutscene = false;
+	}
 	
 		void OnTriggerEnter2D (Collider2D other)
 		{
 				if (other.tag == "CatCheck") {
 						//level 2
 						//do whatever with the cat and leave
-						if ((int)decisions [1] == 0 && storyIndex == 33) {
+						if ((int)decisions [1] == 0 && (storyIndex == 33||storyIndex == 61)) {
 								//leave cat safely on other side
 								GameObject.FindWithTag ("Cat").transform.position = new Vector3 (19.84408f, -1.975335f, 0);
 								GameObject.FindWithTag ("Cat").GetComponent<SpriteRenderer> ().enabled = true;
