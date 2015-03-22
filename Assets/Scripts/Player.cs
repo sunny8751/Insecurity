@@ -29,13 +29,15 @@ public class Player : MonoBehaviour
 				layerMask = ~layerMask;
 				scale = new Vector3 (Screen.width / width, Screen.height / height, 1);
 		style = new GUIStyle ();
+		decisions.Add(action);
+		decisions.Add(2);
+		decisions.Add(action);
 		changeLevel (Application.loadedLevel);
 		next ();
 		}
 
 		public void next ()
 	{
-		anim.SetBool ("Walking", false);
 				storyIndex++;
 				text = story [storyIndex];
 				if (text == "italics") {
@@ -198,7 +200,8 @@ public class Player : MonoBehaviour
 								text = story [storyIndex];
 						}
 						action = -1;
-				} else if (decisions.Count == 5) {
+		} else if (decisions.Count == 5) {
+			GameObject.FindWithTag ("Cat").GetComponent<SpriteRenderer> ().enabled = true;
 						action = -1;
 						next ();
 				}
@@ -850,6 +853,7 @@ public class Player : MonoBehaviour
 						} else {
 								storyIndex = 59;
 								text = story [storyIndex];
+				prompting = false;
 								pause = true;
 						}
 				} else if (other.tag == "Brother") {
