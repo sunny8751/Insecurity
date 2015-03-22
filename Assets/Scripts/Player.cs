@@ -8,11 +8,10 @@ public class Player : MonoBehaviour
 		public Sprite[] sprites;
 		float speed = 7f, jumpSpeed = 400f, playerSizeX, playerSizeY, cameraExtent;
 		string command = "", text = "";
-		bool pause = true, prompting = false;
+		bool pause = true, prompting = false, cutscene = false;
 		int action = -1;
 		IList actionsText, decisions;
 		int storyIndex = -1, personality = 3;
-		//int storyIndex = 21;
 		Vector3 scale;
 		float width = 1061, height = 597;
 		GUIStyle style;
@@ -29,12 +28,14 @@ public class Player : MonoBehaviour
 				style = new GUIStyle ();
 				changeLevel (Application.loadedLevel);
 				Debug.Log ("crying");
-				StartCoroutine ("Wait", .5f);
+		StartCoroutine ("Wait", .5f);
 		}
 
 		IEnumerator Wait (float time)
 		{
+		cutscene = true;
 				yield return new WaitForSeconds (time);
+		cutscene = false;
 				next ();
 		}
 
@@ -86,9 +87,7 @@ public class Player : MonoBehaviour
 
 		void doActions ()
 		{
-				decisions.Add (action);
-				decisions.Add (action);
-				decisions.Add (action);
+		decisions.Add (action);
 				//DEBUG
 				if (decisions.Count == 1) {
 						//first decision
@@ -102,6 +101,7 @@ public class Player : MonoBehaviour
 								command = "mom";
 						} else if ((int)decisions [0] == 1) {
 								//give toy back to brother
+								GameObject.FindWithTag ("Toy").GetComponent<SpriteRenderer> ().enabled = false;
 								storyIndex += 2;
 								text = story [storyIndex];
 								command = "brother";
@@ -131,22 +131,40 @@ public class Player : MonoBehaviour
 								text = story [storyIndex];
 						}
 						action = -1;
-				} else if (decisions.Count == 3) {
-						if ((int)decisions [2] == 0) {
-								//give hw to him
-								storyIndex = 45;
-								text = story [storyIndex];
-						} else if ((int)decisions [2] == 1) {
-								//write wrong answers
-								storyIndex = 47;
-								text = story [storyIndex];
-						} else if ((int)decisions [2] == 2) {
-								//will help him, but he cant copy
-								storyIndex = 53;
-								text = story [storyIndex];
+		} else if (decisions.Count == 3) {
+			if ((int)decisions [2] == 0) {
+				//give hw to him
+				storyIndex = 45;
+				text = story [storyIndex];
+			} else if ((int)decisions [2] == 1) {
+				//write wrong answers
+				storyIndex = 47;
+				text = story [storyIndex];
+			} else if ((int)decisions [2] == 2) {
+				//will help him, but he cant copy
+				storyIndex = 53;
+				text = story [storyIndex];
 			}
 			action = -1;
-				}
+		} else if (decisions.Count == 4) {
+			if ((int)decisions [3] == 0) {
+				//ignore bully
+				storyIndex = 79;
+				next ();
+			} else if ((int)decisions [3] == 1) {
+				//give bully a hug
+				storyIndex = 85;
+				text = story [storyIndex];
+			} else if ((int)decisions [3] == 2) {
+				//make fun of bully
+				storyIndex = 90;
+				text = story [storyIndex];
+			}
+			action = -1;
+		} else if (decisions.Count == 5) {
+			action = -1;
+			next ();
+			}
 				//next ();
 		}
 
@@ -163,7 +181,7 @@ public class Player : MonoBehaviour
 				if (pause) {
 						//paused
 						//dialogue
-						if (Input.GetKeyDown (KeyCode.Space)) {
+						if (Input.GetKeyDown (KeyCode.Space)&&!cutscene) {
 								if (action == -1) {
 										//just dialogue
 										if (storyIndex == 14) {
@@ -211,21 +229,51 @@ public class Player : MonoBehaviour
 												pause = false;
 												prompting = true;
 										} else if (storyIndex == 46) {
-						//gave him the hw- bad
-												storyIndex = 58;
-						text = story [storyIndex];
-						changeAppearance(-1);
-										} else if (storyIndex == 52) {
-						//gave him the wrong answers
-												storyIndex = 58;
-						text = story [storyIndex];
-						changeAppearance(-1);
-										} else if (storyIndex == 57) {
-						//offered to help him- good
-												storyIndex = 58;
+												//gave him the hw- bad
+												storyIndex = 62;
 												text = story [storyIndex];
-						changeAppearance(1);
-										} else {
+												changeAppearance (-1);
+										} else if (storyIndex == 52) {
+												//gave him the wrong answers
+												storyIndex = 62;
+												text = story [storyIndex];
+												changeAppearance (-1);
+										} else if (storyIndex == 57) {
+												//offered to help him- good
+												changeAppearance (1);
+												storyIndex = 62;
+												text = story [storyIndex];
+					} else if (storyIndex == 59) {
+						transform.position = new Vector3 (-19.6f, -1.8f, 0);
+						Camera.main.transform.position = new Vector3 (-cameraExtent, 0, -10);
+						storyIndex = 60;
+						text = story [storyIndex];
+					} else if (storyIndex == 63) {
+						storyIndex = 64;
+						text = story [storyIndex];
+						prompting = true;
+						pause = false;
+					}else if (storyIndex == 66) {
+						storyIndex = 67;
+						text = story [storyIndex];
+						prompting = true;
+						pause = false;
+					}else if (storyIndex == 70) {
+						cutscene = true;
+						text = "";
+						StartCoroutine("Bully");
+					}else if (storyIndex == 84||storyIndex == 89||storyIndex == 91) {
+						storyIndex = 92;
+						text = story [storyIndex];
+					} else if (storyIndex == 104) {
+						if((int)decisions[1]==2){
+						//if has a cat inside
+						storyIndex = 105;
+						}else{
+							storyIndex = 111;
+						}
+						text = story [storyIndex];
+					} else {
 												next ();
 										}
 								} else {
@@ -350,7 +398,60 @@ public class Player : MonoBehaviour
 		"italics",
 		"(Bully snatches homework away)",//56
 		"normal",//57
-		""//58
+		"",//58
+		"Me: Oh no! I stepped in the puddle and got my shoes ruined... Let me go back and change them.",//from level 2- the puddle
+		"Me: Ok! I should be more careful this time.",//60
+		"",
+		"Me: ... ",
+		"Me: Ok. I should probably sit down at my desk before the teacher comes in.",//63
+		"Sit down at your desk...",
+		"Press UP to sit down and start school...", //65
+		"Me: Oh no! The talk I had with my teacher after school today because I was late this morning took a long time.\nIt's already dark outside. I should go back home now.",
+		"Exit through the door...",
+		"Press UP to exit...",
+		"Me: Its too dark outside. I think I'm lost.",//69 and beginning of level 4
+		"Me: Wait... I hear something. Who's there?",
+		"Bully: It's me... D-d-d-do you know where we are?",
+		"Me: Are you lost too?",//72
+		"Bully: N-n-n-no. I know where I'm going... It's just that the darkness is getting in my way!",
+		"Me: So you are lost. And are you shivering? Are you scared of the dark?",//74
+		"Bully: W-w-w-what?! NO I’M FINE- shut it Peg-Leg! You’re the one who’s lost, so hurry up and find a way home.",
+		"3action",//76
+		"Ignore him and stare into the trees",
+		"Comfort the bully; hugs make everything better",
+		"Make fun of the bully",
+		"italics",//80
+		"(Ignores the bully and searches for a way out past the trees)",
+		"normal",
+		"Bully: Hey! Hey? HEY! Are you even paying attention to me?",
+		"Bully: Ignoring me like that was really rude. Now hurry up and find a way out of here.",//84
+		"Me: Hey... everything is going to be alright. Ok?",//85
+		"italics",
+		"(Gives the bully a hug)",
+		"normal",
+		"Me: Now let's get out of here.",//89
+		"Me: Hah! You stutter when you're scared! If only the others at school knew about THIS!",//90
+		"Bully: STOP! Quit being annoying and hurry up and find a way out of here",
+		"Me: Ok, fine. Let's go.",//92
+		"",
+		"Me: Aghh!",//94
+		"Bully: What happened? Are you ok?",
+		"Me: No. I fell in this puddle and broke my prosthetic leg. I don't think I can move anywhere... Stupid leg!",
+		"Bully: What's wrong with it?",
+		"Me: Every one always makes fun of me! I’m no pirate! It’s not like I wanted a peg leg! I can’t play like everyone else!",
+		"Bully: I’m… Sorry. I actually thought it was really cool, but I never had the courage to tell you. I mean, it is like you\nhave a piece of iron man on you. Guess I was pretty jealous.",
+		"Me: ... … ...Thanks. That’s the first time someone was nice about my leg.",
+		"Unknown adult: HELLOOOO! ANYONE THERE??",
+		"Bully: YES WE ARE HERE! HELP!",
+		"...",
+		"Me: I don't think they can hear us.",//104
+		"Me: Oh wait! I know! I have a cat inside my bookbag.",//105
+		"1action",
+		"Take cat out of bookbag",
+		"italics",
+		"Takes out the cat and puts the cat on the ground",
+		"normal",
+		"Cat: MEEEEEOOOOOOWWWWWWWWWWW! MEEEEOOOOWWW! MEEEOOWW!"
 	};
 		//_______________________________________________________________________________
 	
@@ -373,8 +474,16 @@ public class Player : MonoBehaviour
 						cameraExtent = 6.2f;
 						transform.position = new Vector3 (-11.2f, -3.5f, 0);
 				} else if (level == 3) {
+			storyIndex = 69;
+			text = story[storyIndex];
+			pause = true;
+			prompting = false;
+			if((int)decisions[1]!=2){
+				GameObject.FindWithTag("Cat").GetComponent<SpriteRenderer>().enabled = true;
+			}
 						cameraExtent = 9.83f;
-						transform.position = new Vector3 (-12.2f, -2.8f, 0);
+			transform.localRotation = Quaternion.Euler(0,180,0);
+						transform.position = new Vector3 (-17.4f, -2.8f, 0);
 				}
 		
 				Camera.main.transform.position = new Vector3 (-cameraExtent, 0, -10);
@@ -436,19 +545,33 @@ public class Player : MonoBehaviour
 								//talk to brother
 								prompting = false;
 								GameObject.FindWithTag ("Brother").GetComponent<BoxCollider2D> ().enabled = false;
+								//brother happy DEBUG
+								GameObject.FindWithTag ("Toy").transform.position = new Vector3 (4.64f, -4, 0);
+								GameObject.FindWithTag ("Toy").GetComponent<SpriteRenderer> ().enabled = true;
 								next ();
 						} else if (command == "brother1") {
 								// give toy back to brother cuz mom told you to
 								storyIndex = 18;
 								text = story [storyIndex];
 								GameObject.FindWithTag ("Brother").GetComponent<BoxCollider2D> ().enabled = false;
+								//brother happy DEBUG
+								GameObject.FindWithTag ("Toy").transform.position = new Vector3 (4.64f, -4, 0);
+								GameObject.FindWithTag ("Toy").GetComponent<SpriteRenderer> ().enabled = true;
 								pause = true;
 								prompting = false;
 						} else if (storyIndex == 21 || storyIndex == 35) {
 								Application.LoadLevel (Application.loadedLevel + 1);
 								changeLevel (Application.loadedLevel + 1);
 								command = "";
-						}
+			}else if(storyIndex == 65){
+				//sit down at the desk and start school
+				pause = true;
+				StartCoroutine("School");
+			}else if(storyIndex == 68){
+				//leave school
+				Application.LoadLevel (Application.loadedLevel + 1);
+				changeLevel (Application.loadedLevel + 1);
+			}
 				}
 		}
 	
@@ -479,11 +602,19 @@ public class Player : MonoBehaviour
 				if (other.tag == "Door") {
 						if (storyIndex == 20) {
 								storyIndex = 21;
-						} else if (storyIndex == 32) {
-								storyIndex = 35;
-						}
+			} else if (storyIndex == 32) {
+				storyIndex = 35;
+			} else if (storyIndex == 67) {
+				storyIndex = 68;
+			}
 						text = story [storyIndex];
-				}
+				} else if (other.tag == "Brother") {
+						if ((int)decisions [0] == 1 || (command == "brother1")) {
+								//prompt to talk to brother
+								storyIndex = 13;
+								text = story [storyIndex];
+						}
+		}
 		}
 	
 		void OnTriggerExit2D (Collider2D other)
@@ -497,16 +628,64 @@ public class Player : MonoBehaviour
 						} else if (storyIndex == 35) {
 								//level 2
 								storyIndex = 32;
-						}
+						}else if(storyIndex== 68){
+				storyIndex = 67;
+			}
 						text = story [storyIndex];
 				} else if (other.tag == "Brother") {
 						if (((int)decisions [0] == 1 && storyIndex == 13) || command == "brother1") {
 								//prompt to go to brother
-								storyIndex = 12;
-								text = story [storyIndex];
+								if (storyIndex != 11) {
+										storyIndex = 12;
+										text = story [storyIndex];
+								}
 						}
-				}
+		} else if(other.tag=="Desk"&&storyIndex == 65){
+			//sit down at desk
+			storyIndex = 64;
+			text = story[storyIndex];
 		}
+		}
+	IEnumerator School (){
+		//make classroom dark and to signal time passing
+		cutscene = true;
+		SpriteRenderer classroomB = GameObject.FindWithTag("Background").GetComponent<SpriteRenderer>();
+		text = "";
+		float time = 0;
+		while(time<1f){
+			float value = Mathf.Lerp(1,0,time/1);
+			classroomB.color = new Color(value, value, value,1);
+			time += Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+		GameObject.FindWithTag("Bully").SetActive(false);
+		yield return new WaitForSeconds(1.5f);
+		time = 0;
+		while(time<1f){
+			float value = Mathf.Lerp(0,1,time/1);
+			classroomB.color = new Color(value, value, value,1);
+			time += Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+		storyIndex = 66;
+		text = story[storyIndex];
+		cutscene = false;
+	}
+	
+	IEnumerator Bully (){
+		float time = 0;
+		Transform bullyT = GameObject.FindWithTag("Bully").transform;
+		while(time<1f){
+			float pos = Mathf.Lerp(.3f,-13.5f,time/1f);
+			bullyT.position = new Vector3(pos, -2.59f, 0);
+			time += Time.deltaTime;
+			yield return new WaitForEndOfFrame();
+		}
+		//bully done approaching you
+		storyIndex = 71;
+		text = story[storyIndex];
+		cutscene = false;
+	}
 	
 		void OnTriggerEnter2D (Collider2D other)
 		{
@@ -525,16 +704,23 @@ public class Player : MonoBehaviour
 								Destroy (other.gameObject);
 						}
 				} else if (other.tag == "Cat") {
-						next ();
+						storyIndex = 24;
+						text = story [storyIndex];
+						pause = true;
 				} else if (other.tag == "Puddle") {
-						//stepped in puddle
-						Debug.Log ("dead");
+			//stepped in puddle
+			if(storyIndex==93){
+				storyIndex = 94;
+				text = story [storyIndex];
+				other.collider2D.enabled = false;
+				pause = true;
+			}else{
+						storyIndex = 59;
+						text = story [storyIndex];
+						pause = true;
+			}
 				} else if (other.tag == "Brother") {
-						if ((int)decisions [0] == 1 || (command == "brother1")) {
-								//prompt to talk to brother
-								storyIndex = 13;
-								text = story [storyIndex];
-						} else if ((int)decisions [0] == 0 && storyIndex == 11) {
+						if ((int)decisions [0] == 0 && storyIndex == 11) {
 								//mom comes in while trying to walk out of door with toy
 								GameObject.FindWithTag ("Mom").GetComponent<SpriteRenderer> ().enabled = true;
 								storyIndex = 16;
@@ -542,6 +728,10 @@ public class Player : MonoBehaviour
 								pause = true;
 								prompting = false;
 						}
-				}
+		} else if(other.tag=="Desk"&&storyIndex == 64){
+			//sit down at desk
+			storyIndex = 65;
+			text = story[storyIndex];
+		}
 		}
 }

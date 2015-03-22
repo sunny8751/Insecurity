@@ -18,7 +18,7 @@ public class Clothes : MonoBehaviour {
 			Destroy(transform.parent.gameObject);
 			if(hasToy){
 				//drop the toy now
-				Instantiate((GameObject)Resources.Load("Sprites/toy"), new Vector3(transform.position.x,-4.69f,0),Quaternion.identity);
+				Instantiate((GameObject)Resources.Load("Sprites/toy"), new Vector3(transform.position.x,-4,0),Quaternion.identity);
 				GameObject.FindWithTag("Player").GetComponent<Player>().next();
 			}
 		}
