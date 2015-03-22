@@ -28,9 +28,6 @@ public class Player : MonoBehaviour
 				layerMask = ~layerMask;
 				scale = new Vector3 (Screen.width / width, Screen.height / height, 1);
 		style = new GUIStyle ();
-		decisions.Add(action);
-		decisions.Add(action);
-		decisions.Add(action);
 		changeLevel (Application.loadedLevel);
 				Debug.Log ("crying");
 				StartCoroutine ("Wait", .5f);
@@ -38,8 +35,9 @@ public class Player : MonoBehaviour
 
 		IEnumerator Wait (float time)
 		{
-				cutscene = true;
-				yield return new WaitForSeconds (time);
+		cutscene = true;
+		anim.SetBool ("Walking", false);
+		yield return new WaitForSeconds (time);
 				cutscene = false;
 				next ();
 		}
@@ -227,8 +225,9 @@ public class Player : MonoBehaviour
 				if (pause) {
 						//paused
 						//dialogue
-						if (Input.GetKeyDown (KeyCode.Space) && !cutscene) {
-								if (action == -1) {
+			if (Input.GetKeyDown (KeyCode.Space) && !cutscene) {
+				anim.SetBool ("Walking", false);
+				if (action == -1) {
 										//just dialogue
 										if (storyIndex == 14) {
 												//gave back toy, so good
@@ -298,8 +297,9 @@ public class Player : MonoBehaviour
 												prompting = true;
 												pause = false;
 										} else if (storyIndex == 70) {
-												cutscene = true;
-												text = "";
+						cutscene = true;
+						anim.SetBool ("Walking", false);
+						text = "";
 												StartCoroutine (Bully (.3f, -15.5f));
 										} else if (storyIndex == 84 || storyIndex == 89 || storyIndex == 91) {
 												storyIndex = 92;
@@ -315,8 +315,9 @@ public class Player : MonoBehaviour
 										} else if (storyIndex == 111) {
 												//cat got someone's attention
 												//cutscene where adults walk in
-												cutscene = true;
-												StartCoroutine ("Adults");
+						cutscene = true;
+						anim.SetBool ("Walking", false);
+						StartCoroutine ("Adults");
 										} else if (storyIndex == 114) {
 												//go to mom
 												storyIndex = 115;
@@ -325,8 +326,9 @@ public class Player : MonoBehaviour
 												pause = false;
 										} else if (storyIndex == 118) {
 												//adults come and they go home
-												cutscene = true;
-												StartCoroutine ("Home");
+						cutscene = true;
+						anim.SetBool ("Walking", false);
+						StartCoroutine ("Home");
 										} else {
 												next ();
 										}
@@ -603,8 +605,9 @@ public class Player : MonoBehaviour
 						rigidbody2D.AddForce (Vector2.up * jumpSpeed);
 				}
 				//commands
-				if (Input.GetKeyDown (KeyCode.UpArrow)) {
-						if (command == "brother") {
+		if (Input.GetKeyDown (KeyCode.UpArrow)) {
+			anim.SetBool ("Walking", false);
+			if (command == "brother") {
 								//talk to brother
 								prompting = false;
 								GameObject.FindWithTag ("Brother").GetComponent<BoxCollider2D> ().enabled = false;
@@ -638,8 +641,9 @@ public class Player : MonoBehaviour
 								//talk to mom
 								prompting = false;
 								text = "";
-								cutscene = true;
-								pause = true;
+				cutscene = true;
+				anim.SetBool ("Walking", false);
+				pause = true;
 								StartCoroutine (Bully (-5, 2));
 						}
 				}
@@ -723,8 +727,9 @@ public class Player : MonoBehaviour
 		IEnumerator School ()
 		{
 				//make classroom dark and to signal time passing
-				cutscene = true;
-				SpriteRenderer classroomB = GameObject.FindWithTag ("Background").GetComponent<SpriteRenderer> ();
+		cutscene = true;
+		anim.SetBool ("Walking", false);
+		SpriteRenderer classroomB = GameObject.FindWithTag ("Background").GetComponent<SpriteRenderer> ();
 				text = "";
 				float time = 0;
 				while (time<1f) {
