@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
 				scale = new Vector3 (Screen.width / width, Screen.height / height, 1);
 				style = new GUIStyle ();
 				//decisions.Add(action);
-				changeLevel (Application.loadedLevel);
+		changeLevel (Application.loadedLevel);
 				Debug.Log ("crying");
 				StartCoroutine ("Wait", .5f);
 		}
@@ -93,8 +93,28 @@ public class Player : MonoBehaviour
 						dy = 0;
 				}
 				transform.position = new Vector3 (transform.position.x, transform.position.y + dy, 0);
-				Destroy (GetComponent<BoxCollider2D> ());
-				gameObject.AddComponent<BoxCollider2D> ();
+		if(personality == 6){
+			transform.GetComponent<BoxCollider2D>().size = new Vector2(1.76f, 5.17f);
+			transform.GetComponent<BoxCollider2D>().center = new Vector2(-.65f, 0.02f);
+		} else if(personality == 5){
+			transform.GetComponent<BoxCollider2D>().size = new Vector2(2.12f, 5.17f);
+			transform.GetComponent<BoxCollider2D>().center = new Vector2(-0.17f, -.08f);
+		}else if(personality == 4){
+			transform.GetComponent<BoxCollider2D>().size = new Vector2(2.22f, 5.29f);
+			transform.GetComponent<BoxCollider2D>().center = new Vector2(0f, -0.12f);
+		}else if(personality == 3){
+			transform.GetComponent<BoxCollider2D>().size = new Vector2(2.87f, 4.87f);
+			transform.GetComponent<BoxCollider2D>().center = new Vector2(0f, 0f);
+		}else if(personality == 2){
+			transform.GetComponent<BoxCollider2D>().size = new Vector2(2.66f, 6.27f);
+			transform.GetComponent<BoxCollider2D>().center = new Vector2(-.48f, 0f);
+		}else if(personality == 1){
+			transform.GetComponent<BoxCollider2D>().size = new Vector2(2.87f, 6.43f);
+			transform.GetComponent<BoxCollider2D>().center = new Vector2(-.42f, 0.1f);
+		}else if (personality==0){
+			transform.GetComponent<BoxCollider2D>().size = new Vector2(3.41f, 8.57f);
+			transform.GetComponent<BoxCollider2D>().center = new Vector2(-1.55f, -.21f);
+		}
 		}
 
 		void doActions ()
