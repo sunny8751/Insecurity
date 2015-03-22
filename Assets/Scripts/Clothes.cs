@@ -12,6 +12,8 @@ public class Clothes : MonoBehaviour {
 		//jumped on clothes
 		if(other.rigidbody2D.velocity.y<0){
 		counter++;
+			//instantiate poof
+			Instantiate((GameObject)Resources.Load("ClothesPoof"), transform.position, Quaternion.identity);
 		}
 		if(counter==3){
 			//make clothes disappear

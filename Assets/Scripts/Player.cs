@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 		public LayerMask layerMask;
 		public Texture2D textbox;
 		public Sprite[] sprites;
-		float speed = 7f, jumpSpeed = 400f, playerSizeX, playerSizeY, cameraExtent;
+		float speed = 3f, jumpSpeed = 400f, playerSizeX, playerSizeY, cameraExtent;
 		string command = "", text = "";
 		bool pause = true, prompting = false, cutscene = false;
 		int action = -1;
@@ -15,18 +15,20 @@ public class Player : MonoBehaviour
 		Vector3 scale;
 		float width = 1061, height = 597;
 		GUIStyle style;
+		Animator anim;
 
 		void Start ()
 		{
 				DontDestroyOnLoad (gameObject);
+				anim = transform.GetComponent<Animator> ();
 				actionsText = new ArrayList ();
 				decisions = new ArrayList ();
 				playerSizeX = GetComponent<SpriteRenderer> ().sprite.bounds.size.x * transform.localScale.x;
 				playerSizeY = GetComponent<SpriteRenderer> ().sprite.bounds.size.y * transform.localScale.y;
 				layerMask = ~layerMask;
 				scale = new Vector3 (Screen.width / width, Screen.height / height, 1);
-		style = new GUIStyle ();
-		//decisions.Add(action);
+				style = new GUIStyle ();
+				//decisions.Add(action);
 				changeLevel (Application.loadedLevel);
 				Debug.Log ("crying");
 				StartCoroutine ("Wait", .5f);
@@ -50,14 +52,14 @@ public class Player : MonoBehaviour
 						text = story [storyIndex];
 				} else if (text == "normal") {
 						style.fontStyle = FontStyle.Normal;
-			if (storyIndex == 57) {
-				//offered to help him- good
-				storyIndex = 62;
-				text = story [storyIndex];
-			}else{
-						storyIndex++;
-						text = story [storyIndex];
-			}
+						if (storyIndex == 57) {
+								//offered to help him- good
+								storyIndex = 62;
+								text = story [storyIndex];
+						} else {
+								storyIndex++;
+								text = story [storyIndex];
+						}
 				}
 				if (text == "") {
 						pause = false;
@@ -74,12 +76,15 @@ public class Player : MonoBehaviour
 				}
 				if (storyIndex == 16) {
 						GameObject.FindWithTag ("Mom").GetComponent<SpriteRenderer> ().enabled = true;
+				}
 		}
-	}
 	
-	void changeAppearance (int i)
-	{
-		personality += i;
+		void changeAppearance (int i)
+		{
+				personality += i;
+		anim.SetInteger ("Character", personality);
+		//create poof
+		Instantiate((GameObject) Resources.Load("Poof"), transform.position, Quaternion.identity);
 				gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [personality];
 				playerSizeX = gameObject.GetComponent<SpriteRenderer> ().sprite.bounds.size.x * transform.localScale.x;
 				playerSizeY = gameObject.GetComponent<SpriteRenderer> ().sprite.bounds.size.y * transform.localScale.y;
@@ -95,13 +100,13 @@ public class Player : MonoBehaviour
 		void doActions ()
 		{
 				decisions.Add (action);
-				//DEBUG
 				if (decisions.Count == 1) {
 						//first decision
 						if ((int)decisions [0] == 0) {
 								//hide toy and try to leave
 								//hide the toy
 								GameObject.FindWithTag ("Toy").GetComponent<SpriteRenderer> ().enabled = false;
+								GameObject.FindWithTag ("Brother").GetComponent<BoxCollider2D> ().enabled = true;
 								changeAppearance (-1);
 								storyIndex++;
 								text = story [storyIndex];
@@ -109,6 +114,7 @@ public class Player : MonoBehaviour
 						} else if ((int)decisions [0] == 1) {
 								//give toy back to brother
 								GameObject.FindWithTag ("Toy").GetComponent<SpriteRenderer> ().enabled = false;
+								GameObject.FindWithTag ("Brother").GetComponent<BoxCollider2D> ().enabled = true;
 								storyIndex += 2;
 								text = story [storyIndex];
 								command = "brother";
@@ -140,19 +146,19 @@ public class Player : MonoBehaviour
 						action = -1;
 				} else if (decisions.Count == 3) {
 						if ((int)decisions [2] == 0) {
-				//give hw to him
-				changeAppearance (-1);
-				storyIndex = 45;
+								//give hw to him
+								changeAppearance (-1);
+								storyIndex = 45;
 								text = story [storyIndex];
 						} else if ((int)decisions [2] == 1) {
-				//write wrong answers
-				changeAppearance (-1);
-				storyIndex = 47;
+								//write wrong answers
+								changeAppearance (-1);
+								storyIndex = 47;
 								text = story [storyIndex];
 						} else if ((int)decisions [2] == 2) {
-				//will help him, but he cant copy
-				changeAppearance (1);
-				storyIndex = 53;
+								//will help him, but he cant copy
+								changeAppearance (1);
+								storyIndex = 53;
 								text = story [storyIndex];
 						}
 						action = -1;
@@ -182,12 +188,12 @@ public class Player : MonoBehaviour
 
 		void Update ()
 		{
-		if(Application.loadedLevel==3){
-			if(storyIndex==69&&(int)decisions[1]!=2){
-				GameObject.FindWithTag ("Cat").GetComponent<SpriteRenderer>().enabled = true;
-			}
-		}
-		if (Input.GetKeyDown (KeyCode.A)) {
+				if (Application.loadedLevel == 3) {
+						if (storyIndex == 69 && (int)decisions [1] != 2) {
+								GameObject.FindWithTag ("Cat").GetComponent<SpriteRenderer> ().enabled = true;
+						}
+				}
+				if (Input.GetKeyDown (KeyCode.A)) {
 						Application.LoadLevel (Application.loadedLevel + 1);
 						changeLevel (Application.loadedLevel + 1);
 						command = "";
@@ -521,6 +527,7 @@ public class Player : MonoBehaviour
 		{
 				// left and right movement
 				if (Input.GetKey (KeyCode.RightArrow)) {
+						anim.SetBool ("Walking", true);
 						//change position of player
 						transform.position += Vector3.right * speed * Time.deltaTime;
 						//change direction of player
@@ -529,6 +536,7 @@ public class Player : MonoBehaviour
 								Camera.main.transform.position += Vector3.right * speed * Time.deltaTime;
 						}
 				} else if (Input.GetKey (KeyCode.LeftArrow)) {
+						anim.SetBool ("Walking", true);
 						//change position of player
 						transform.position += Vector3.left * speed * Time.deltaTime;
 						//change direction of player
@@ -536,6 +544,10 @@ public class Player : MonoBehaviour
 						if (!(Camera.main.WorldToScreenPoint (transform.position).x > Screen.width / 2)) {
 								Camera.main.transform.position += Vector3.left * speed * Time.deltaTime;
 						}
+				} else {
+						//not either left or right
+						//not moving
+						anim.SetBool ("Walking", false);
 				}
 				//player goes down a platform
 				if (Input.GetKey (KeyCode.DownArrow)) {
@@ -716,25 +728,25 @@ public class Player : MonoBehaviour
 		{
 				float time = 0;
 				Transform bullyT = GameObject.FindWithTag ("Bully").transform;
-		if (storyIndex == 116) {
-			GameObject.FindWithTag ("Bully").transform.localRotation = Quaternion.Euler (new Vector3 (0, 180, 0));
-			transform.localRotation = Quaternion.Euler (new Vector3 (0, 0, 0));
-			text = "";
-		}
+				if (storyIndex == 116) {
+						GameObject.FindWithTag ("Bully").transform.localRotation = Quaternion.Euler (new Vector3 (0, 180, 0));
+						transform.localRotation = Quaternion.Euler (new Vector3 (0, 0, 0));
+						text = "";
+				}
 				while (time<6f) {
 						float pos = Mathf.Lerp (startPos, endPos, time / 6f);
 						bullyT.position = new Vector3 (pos, -2.59f, 0);
 						time += Time.deltaTime;
 						yield return new WaitForEndOfFrame ();
 				}
-		if(storyIndex ==116) {
-			next ();
-		}else{
+				if (storyIndex == 116) {
+						next ();
+				} else {
 						//bully done approaching you
 						storyIndex = 71;
 						text = story [storyIndex];
-		}
-		cutscene = false;
+				}
+				cutscene = false;
 		}
 
 		IEnumerator Adults ()
