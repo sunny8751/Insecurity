@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 		public LayerMask layerMask;
 		public Texture2D textbox;
 		public Sprite[] sprites;
+	public Sprite brotherHappy;
 		float speed = 3f, jumpSpeed = 400f, playerSizeX, playerSizeY, cameraExtent;
 		string command = "", text = "";
 		bool pause = true, prompting = false, cutscene = false;
@@ -29,17 +30,7 @@ public class Player : MonoBehaviour
 				scale = new Vector3 (Screen.width / width, Screen.height / height, 1);
 		style = new GUIStyle ();
 		changeLevel (Application.loadedLevel);
-				Debug.Log ("crying");
-				StartCoroutine ("Wait", .5f);
-		}
-
-		IEnumerator Wait (float time)
-		{
-		cutscene = true;
-		anim.SetBool ("Walking", false);
-		yield return new WaitForSeconds (time);
-				cutscene = false;
-				next ();
+		next ();
 		}
 
 		public void next ()
@@ -514,7 +505,7 @@ public class Player : MonoBehaviour
 		"Go to mom...",
 		"Press UP",
 		"Bully: Wait... Hey, before you go, I just wanted to tell you that I'm sorry for everything I did. Can we start over?",//117
-		"Me: Yeah, thanks for apologizing. That means a lot to me. I'll see you at school tomorrow!"
+		"Me: Yeah, thanks for apologizing. That means a lot to me. Maybe I can still make friends despite my leg..."
 	};
 		//_______________________________________________________________________________
 	
@@ -611,7 +602,7 @@ public class Player : MonoBehaviour
 								//talk to brother
 								prompting = false;
 								GameObject.FindWithTag ("Brother").GetComponent<BoxCollider2D> ().enabled = false;
-								//brother happy DEBUG
+				GameObject.FindWithTag("Brother").GetComponent<SpriteRenderer>().sprite = brotherHappy;
 								GameObject.FindWithTag ("Toy").transform.position = new Vector3 (4.64f, -4, 0);
 								GameObject.FindWithTag ("Toy").GetComponent<SpriteRenderer> ().enabled = true;
 								next ();
@@ -619,8 +610,8 @@ public class Player : MonoBehaviour
 								// give toy back to brother cuz mom told you to
 								storyIndex = 18;
 								text = story [storyIndex];
-								GameObject.FindWithTag ("Brother").GetComponent<BoxCollider2D> ().enabled = false;
-								//brother happy DEBUG
+				GameObject.FindWithTag ("Brother").GetComponent<BoxCollider2D> ().enabled = false;
+				GameObject.FindWithTag("Brother").GetComponent<SpriteRenderer>().sprite = brotherHappy;	
 								GameObject.FindWithTag ("Toy").transform.position = new Vector3 (4.64f, -4, 0);
 								GameObject.FindWithTag ("Toy").GetComponent<SpriteRenderer> ().enabled = true;
 								pause = true;
