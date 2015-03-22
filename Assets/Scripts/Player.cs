@@ -26,17 +26,17 @@ public class Player : MonoBehaviour
 				layerMask = ~layerMask;
 				scale = new Vector3 (Screen.width / width, Screen.height / height, 1);
 		style = new GUIStyle ();
-		decisions.Add (action);
+		//decisions.Add(action);
 				changeLevel (Application.loadedLevel);
 				Debug.Log ("crying");
-		StartCoroutine ("Wait", .5f);
+				StartCoroutine ("Wait", .5f);
 		}
 
 		IEnumerator Wait (float time)
 		{
-		cutscene = true;
+				cutscene = true;
 				yield return new WaitForSeconds (time);
-		cutscene = false;
+				cutscene = false;
 				next ();
 		}
 
@@ -50,8 +50,14 @@ public class Player : MonoBehaviour
 						text = story [storyIndex];
 				} else if (text == "normal") {
 						style.fontStyle = FontStyle.Normal;
+			if (storyIndex == 57) {
+				//offered to help him- good
+				storyIndex = 62;
+				text = story [storyIndex];
+			}else{
 						storyIndex++;
 						text = story [storyIndex];
+			}
 				}
 				if (text == "") {
 						pause = false;
@@ -68,15 +74,15 @@ public class Player : MonoBehaviour
 				}
 				if (storyIndex == 16) {
 						GameObject.FindWithTag ("Mom").GetComponent<SpriteRenderer> ().enabled = true;
-				}
 		}
-
-		void changeAppearance (int i)
-		{
-				personality += i;
+	}
+	
+	void changeAppearance (int i)
+	{
+		personality += i;
 				gameObject.GetComponent<SpriteRenderer> ().sprite = sprites [personality];
-				playerSizeX = GetComponent<SpriteRenderer> ().sprite.bounds.size.x * transform.localScale.x;
-				playerSizeY = GetComponent<SpriteRenderer> ().sprite.bounds.size.y * transform.localScale.y;
+				playerSizeX = gameObject.GetComponent<SpriteRenderer> ().sprite.bounds.size.x * transform.localScale.x;
+				playerSizeY = gameObject.GetComponent<SpriteRenderer> ().sprite.bounds.size.y * transform.localScale.y;
 				float dy = .3f;
 				if (personality == 3) {
 						dy = 0;
@@ -88,7 +94,7 @@ public class Player : MonoBehaviour
 
 		void doActions ()
 		{
-		decisions.Add (action);
+				decisions.Add (action);
 				//DEBUG
 				if (decisions.Count == 1) {
 						//first decision
@@ -132,46 +138,56 @@ public class Player : MonoBehaviour
 								text = story [storyIndex];
 						}
 						action = -1;
-		} else if (decisions.Count == 3) {
-			if ((int)decisions [2] == 0) {
+				} else if (decisions.Count == 3) {
+						if ((int)decisions [2] == 0) {
 				//give hw to him
+				changeAppearance (-1);
 				storyIndex = 45;
-				text = story [storyIndex];
-			} else if ((int)decisions [2] == 1) {
+								text = story [storyIndex];
+						} else if ((int)decisions [2] == 1) {
 				//write wrong answers
+				changeAppearance (-1);
 				storyIndex = 47;
-				text = story [storyIndex];
-			} else if ((int)decisions [2] == 2) {
+								text = story [storyIndex];
+						} else if ((int)decisions [2] == 2) {
 				//will help him, but he cant copy
+				changeAppearance (1);
 				storyIndex = 53;
-				text = story [storyIndex];
-			}
-			action = -1;
-		} else if (decisions.Count == 4) {
-			if ((int)decisions [3] == 0) {
-				//ignore bully
-				storyIndex = 79;
-				next ();
-			} else if ((int)decisions [3] == 1) {
-				//give bully a hug
-				storyIndex = 85;
-				text = story [storyIndex];
-			} else if ((int)decisions [3] == 2) {
-				//make fun of bully
-				storyIndex = 90;
-				text = story [storyIndex];
-			}
-			action = -1;
-		} else if (decisions.Count == 5) {
-			action = -1;
-			next ();
-			}
-				//next ();
+								text = story [storyIndex];
+						}
+						action = -1;
+				} else if (decisions.Count == 4) {
+						if ((int)decisions [3] == 0) {
+								//ignore bully
+								changeAppearance (-1);
+								storyIndex = 79;
+								next ();
+						} else if ((int)decisions [3] == 1) {
+								//give bully a hug
+								changeAppearance (1);
+								storyIndex = 85;
+								text = story [storyIndex];
+						} else if ((int)decisions [3] == 2) {
+								//make fun of bully
+								changeAppearance (-1);
+								storyIndex = 90;
+								text = story [storyIndex];
+						}
+						action = -1;
+				} else if (decisions.Count == 5) {
+						action = -1;
+						next ();
+				}
 		}
 
 		void Update ()
 		{
-				if (Input.GetKeyDown (KeyCode.A)) {
+		if(Application.loadedLevel==3){
+			if(storyIndex==69&&(int)decisions[1]!=2){
+				GameObject.FindWithTag ("Cat").GetComponent<SpriteRenderer>().enabled = true;
+			}
+		}
+		if (Input.GetKeyDown (KeyCode.A)) {
 						Application.LoadLevel (Application.loadedLevel + 1);
 						changeLevel (Application.loadedLevel + 1);
 						command = "";
@@ -182,7 +198,7 @@ public class Player : MonoBehaviour
 				if (pause) {
 						//paused
 						//dialogue
-						if (Input.GetKeyDown (KeyCode.Space)&&!cutscene) {
+						if (Input.GetKeyDown (KeyCode.Space) && !cutscene) {
 								if (action == -1) {
 										//just dialogue
 										if (storyIndex == 14) {
@@ -233,53 +249,56 @@ public class Player : MonoBehaviour
 												//gave him the hw- bad
 												storyIndex = 62;
 												text = story [storyIndex];
-												changeAppearance (-1);
 										} else if (storyIndex == 52) {
 												//gave him the wrong answers
 												storyIndex = 62;
 												text = story [storyIndex];
-												changeAppearance (-1);
-										} else if (storyIndex == 57) {
-												//offered to help him- good
-												changeAppearance (1);
-												storyIndex = 62;
+										} else if (storyIndex == 59) {
+												transform.position = new Vector3 (-19.6f, -1.8f, 0);
+												Camera.main.transform.position = new Vector3 (-cameraExtent, 0, -10);
+												storyIndex = 60;
 												text = story [storyIndex];
-					} else if (storyIndex == 59) {
-						transform.position = new Vector3 (-19.6f, -1.8f, 0);
-						Camera.main.transform.position = new Vector3 (-cameraExtent, 0, -10);
-						storyIndex = 60;
-						text = story [storyIndex];
-					} else if (storyIndex == 63) {
-						storyIndex = 64;
-						text = story [storyIndex];
-						prompting = true;
-						pause = false;
-					}else if (storyIndex == 66) {
-						storyIndex = 67;
-						text = story [storyIndex];
-						prompting = true;
-						pause = false;
-					}else if (storyIndex == 70) {
-						cutscene = true;
-						text = "";
-						StartCoroutine("Bully");
-					}else if (storyIndex == 84||storyIndex == 89||storyIndex == 91) {
-						storyIndex = 92;
-						text = story [storyIndex];
-					} else if (storyIndex == 104) {
-						if((int)decisions[1]==2){
-							//if has a cat inside
-							storyIndex = 105;
-						}else{
-							storyIndex = 111;
-						}
-						text = story [storyIndex];
-					} else if (storyIndex == 111) {
-						//cat got someone's attention
-						//cutscene where adults walk in
-						cutscene = true;
-						StartCoroutine("Adults");
-					} else {
+										} else if (storyIndex == 63) {
+												storyIndex = 64;
+												text = story [storyIndex];
+												prompting = true;
+												pause = false;
+										} else if (storyIndex == 66) {
+												storyIndex = 67;
+												text = story [storyIndex];
+												prompting = true;
+												pause = false;
+										} else if (storyIndex == 70) {
+												cutscene = true;
+												text = "";
+												StartCoroutine (Bully (.3f, -15.5f));
+										} else if (storyIndex == 84 || storyIndex == 89 || storyIndex == 91) {
+												storyIndex = 92;
+												text = story [storyIndex];
+										} else if (storyIndex == 104) {
+												if ((int)decisions [1] == 2) {
+														//if has a cat inside
+														storyIndex = 105;
+												} else {
+														storyIndex = 111;
+												}
+												text = story [storyIndex];
+										} else if (storyIndex == 111) {
+												//cat got someone's attention
+												//cutscene where adults walk in
+												cutscene = true;
+												StartCoroutine ("Adults");
+										} else if (storyIndex == 114) {
+												//go to mom
+												storyIndex = 115;
+												text = story [storyIndex];
+												prompting = true;
+												pause = false;
+										} else if (storyIndex == 118) {
+												//adults come and they go home
+												cutscene = true;
+												StartCoroutine ("Home");
+										} else {
 												next ();
 										}
 								} else {
@@ -458,7 +477,13 @@ public class Player : MonoBehaviour
 		"Takes out the cat and puts the cat on the ground",
 		"normal",
 		"Cat: MEEEEEOOOOOOWWWWWWWWWWW! MEEEEOOOOWWW! MEEEOOWW!",//111
-		""
+		"",
+		"Mom: Oh, thank goodness you guys are there! I was worried that you guys were lost!",
+		"Mom: It's lucky that you two were together because if you guys weren't, I might have not heard you. Come here\nand I'll take you home.",//114
+		"Go to mom...",
+		"Press UP",
+		"Bully: Wait... Hey, before you go, I just wanted to tell you that I'm sorry for everything I did. Can we start over?",//117
+		"Me: Yeah, thanks for apologizing. That means a lot to me. I'll see you at school tomorrow!"
 	};
 		//_______________________________________________________________________________
 	
@@ -481,20 +506,14 @@ public class Player : MonoBehaviour
 						cameraExtent = 6.2f;
 						transform.position = new Vector3 (-11.2f, -3.5f, 0);
 				} else if (level == 3) {
-			storyIndex = 69;
-			text = story[storyIndex];
-			pause = true;
-			prompting = false;
+						storyIndex = 69;
+						text = story [storyIndex];
+						pause = true;
+						prompting = false;
 						cameraExtent = 9.83f;
-			transform.localRotation = Quaternion.Euler(0,180,0);
-			transform.position = new Vector3 (-17.4f, -2.8f, 0);
-			/*
-			if((int)decisions[1]==2){
-				GameObject.FindWithTag("Cat").GetComponent<SpriteRenderer>().enabled = false;
-			}
-			*/
+						transform.localRotation = Quaternion.Euler (0, 180, 0);
+						transform.position = new Vector3 (-17.4f, -2.8f, 0);
 				}
-		
 				Camera.main.transform.position = new Vector3 (-cameraExtent, 0, -10);
 		}
 	
@@ -572,15 +591,22 @@ public class Player : MonoBehaviour
 								Application.LoadLevel (Application.loadedLevel + 1);
 								changeLevel (Application.loadedLevel + 1);
 								command = "";
-			}else if(storyIndex == 65){
-				//sit down at the desk and start school
-				pause = true;
-				StartCoroutine("School");
-			}else if(storyIndex == 68){
-				//leave school
-				Application.LoadLevel (Application.loadedLevel + 1);
-				changeLevel (Application.loadedLevel + 1);
-			}
+						} else if (storyIndex == 65) {
+								//sit down at the desk and start school
+								pause = true;
+								StartCoroutine ("School");
+						} else if (storyIndex == 68) {
+								//leave school
+								Application.LoadLevel (Application.loadedLevel + 1);
+								changeLevel (Application.loadedLevel + 1);
+						} else if (storyIndex == 116) {
+								//talk to mom
+								prompting = false;
+								text = "";
+								cutscene = true;
+								pause = true;
+								StartCoroutine (Bully (-5, 2));
+						}
 				}
 		}
 	
@@ -611,11 +637,11 @@ public class Player : MonoBehaviour
 				if (other.tag == "Door") {
 						if (storyIndex == 20) {
 								storyIndex = 21;
-			} else if (storyIndex == 32||storyIndex == 61) {
-				storyIndex = 35;
-			} else if (storyIndex == 67) {
-				storyIndex = 68;
-			}
+						} else if (storyIndex == 32 || storyIndex == 61) {
+								storyIndex = 35;
+						} else if (storyIndex == 67) {
+								storyIndex = 68;
+						}
 						text = story [storyIndex];
 				} else if (other.tag == "Brother") {
 						if ((int)decisions [0] == 1 || (command == "brother1")) {
@@ -623,7 +649,7 @@ public class Player : MonoBehaviour
 								storyIndex = 13;
 								text = story [storyIndex];
 						}
-		}
+				}
 		}
 	
 		void OnTriggerExit2D (Collider2D other)
@@ -637,9 +663,9 @@ public class Player : MonoBehaviour
 						} else if (storyIndex == 35) {
 								//level 2
 								storyIndex = 32;
-						}else if(storyIndex== 68){
-				storyIndex = 67;
-			}
+						} else if (storyIndex == 68) {
+								storyIndex = 67;
+						}
 						text = story [storyIndex];
 				} else if (other.tag == "Brother") {
 						if (((int)decisions [0] == 1 && storyIndex == 13) || command == "brother1") {
@@ -649,74 +675,118 @@ public class Player : MonoBehaviour
 										text = story [storyIndex];
 								}
 						}
-		} else if(other.tag=="Desk"&&storyIndex == 65){
-			//sit down at desk
-			storyIndex = 64;
-			text = story[storyIndex];
+				} else if (other.tag == "Desk" && storyIndex == 65) {
+						//sit down at desk
+						storyIndex = 64;
+						text = story [storyIndex];
+				} else if (other.tag == "Mom" && storyIndex == 116) {
+						storyIndex = 115;
+						text = story [storyIndex];
+				}
 		}
-		}
-	IEnumerator School (){
-		//make classroom dark and to signal time passing
-		cutscene = true;
-		SpriteRenderer classroomB = GameObject.FindWithTag("Background").GetComponent<SpriteRenderer>();
-		text = "";
-		float time = 0;
-		while(time<1f){
-			float value = Mathf.Lerp(1,0,time/1);
-			classroomB.color = new Color(value, value, value,1);
-			time += Time.deltaTime;
-			yield return new WaitForEndOfFrame();
-		}
-		GameObject.FindWithTag("Bully").SetActive(false);
-		yield return new WaitForSeconds(1.5f);
-		time = 0;
-		while(time<1f){
-			float value = Mathf.Lerp(0,1,time/1);
-			classroomB.color = new Color(value, value, value,1);
-			time += Time.deltaTime;
-			yield return new WaitForEndOfFrame();
-		}
-		storyIndex = 66;
-		text = story[storyIndex];
-		cutscene = false;
-	}
-	
-	IEnumerator Bully (){
-		float time = 0;
-		Transform bullyT = GameObject.FindWithTag("Bully").transform;
-		while(time<1f){
-			float pos = Mathf.Lerp(.3f,-13.5f,time/1f);
-			bullyT.position = new Vector3(pos, -2.59f, 0);
-			time += Time.deltaTime;
-			yield return new WaitForEndOfFrame();
-		}
-		//bully done approaching you
-		storyIndex = 71;
-		text = story[storyIndex];
-		cutscene = false;
-	}
 
-	IEnumerator Adults (){
-		float time = 0;
-		Transform adults = GameObject.FindWithTag("Adult").transform;
-		while(time<1f){
-			float pos = Mathf.Lerp(.3f,-13.5f,time/1f);
-			adults.position = new Vector3(pos, -2.59f, 0);
-			time += Time.deltaTime;
-			yield return new WaitForEndOfFrame();
+		IEnumerator School ()
+		{
+				//make classroom dark and to signal time passing
+				cutscene = true;
+				SpriteRenderer classroomB = GameObject.FindWithTag ("Background").GetComponent<SpriteRenderer> ();
+				text = "";
+				float time = 0;
+				while (time<1f) {
+						float value = Mathf.Lerp (1, 0, time / 1);
+						classroomB.color = new Color (value, value, value, 1);
+						time += Time.deltaTime;
+						yield return new WaitForEndOfFrame ();
+				}
+				GameObject.FindWithTag ("Bully").SetActive (false);
+				yield return new WaitForSeconds (1.5f);
+				time = 0;
+				while (time<1f) {
+						float value = Mathf.Lerp (0, 1, time / 1);
+						classroomB.color = new Color (value, value, value, 1);
+						time += Time.deltaTime;
+						yield return new WaitForEndOfFrame ();
+				}
+				storyIndex = 66;
+				text = story [storyIndex];
+				cutscene = false;
 		}
-		//bully done approaching you
-		storyIndex = 112;
-		text = story[storyIndex];
+	
+		IEnumerator Bully (float startPos, float endPos)
+		{
+				float time = 0;
+				Transform bullyT = GameObject.FindWithTag ("Bully").transform;
+		if (storyIndex == 116) {
+			GameObject.FindWithTag ("Bully").transform.localRotation = Quaternion.Euler (new Vector3 (0, 180, 0));
+			transform.localRotation = Quaternion.Euler (new Vector3 (0, 0, 0));
+			text = "";
+		}
+				while (time<6f) {
+						float pos = Mathf.Lerp (startPos, endPos, time / 6f);
+						bullyT.position = new Vector3 (pos, -2.59f, 0);
+						time += Time.deltaTime;
+						yield return new WaitForEndOfFrame ();
+				}
+		if(storyIndex ==116) {
+			next ();
+		}else{
+						//bully done approaching you
+						storyIndex = 71;
+						text = story [storyIndex];
+		}
 		cutscene = false;
-	}
+		}
+
+		IEnumerator Adults ()
+		{
+				text = "";
+				float time = 0;
+				float totalTime = 1f;
+				Transform cat = GameObject.FindWithTag ("Cat").transform;
+				while (time<totalTime) {
+						float pos = Mathf.Lerp (-7.5f, 0, time / totalTime);
+						cat.position = new Vector3 (pos, -3.27f, 0);
+						time += Time.deltaTime;
+						yield return new WaitForEndOfFrame ();
+				}
+				cat.gameObject.SetActive (false);
+				storyIndex = 113;
+				text = story [storyIndex];
+				cutscene = false;
+		}
+
+		IEnumerator Home ()
+		{
+				//make scene dark
+				SpriteRenderer forestB = GameObject.FindWithTag ("Background").GetComponent<SpriteRenderer> ();
+				SpriteRenderer playerB = GameObject.FindWithTag ("Player").GetComponent<SpriteRenderer> ();
+				SpriteRenderer momB = GameObject.FindWithTag ("Mom").GetComponent<SpriteRenderer> ();
+				SpriteRenderer bullyB = GameObject.FindWithTag ("Bully").GetComponent<SpriteRenderer> ();
+				text = "";
+				float time = 0;
+				while (time<3f) {
+						float value = Mathf.Lerp (1, 0, time / 3);
+						forestB.color = new Color (value, value, value, 1);
+						playerB.color = new Color (value, value, value, 1);
+						momB.color = new Color (value, value, value, 1);
+						bullyB.color = new Color (value, value, value, 1);
+						time += Time.deltaTime;
+						yield return new WaitForEndOfFrame ();
+				}
+				Destroy (gameObject);
+				Application.LoadLevel (Application.loadedLevel + 1);
+		}
 	
 		void OnTriggerEnter2D (Collider2D other)
 		{
+				if (other.tag == "Mom" && storyIndex == 115) {
+						storyIndex = 116;
+						text = story [storyIndex];
+				} else 
 				if (other.tag == "CatCheck") {
 						//level 2
 						//do whatever with the cat and leave
-						if ((int)decisions [1] == 0 && (storyIndex == 33||storyIndex == 61)) {
+						if ((int)decisions [1] == 0 && (storyIndex == 33 || storyIndex == 61)) {
 								//leave cat safely on other side
 								GameObject.FindWithTag ("Cat").transform.position = new Vector3 (19.84408f, -1.975335f, 0);
 								GameObject.FindWithTag ("Cat").GetComponent<SpriteRenderer> ().enabled = true;
@@ -732,17 +802,17 @@ public class Player : MonoBehaviour
 						text = story [storyIndex];
 						pause = true;
 				} else if (other.tag == "Puddle") {
-			//stepped in puddle
-			if(storyIndex==93){
-				storyIndex = 94;
-				text = story [storyIndex];
-				other.collider2D.enabled = false;
-				pause = true;
-			}else{
-						storyIndex = 59;
-						text = story [storyIndex];
-						pause = true;
-			}
+						//stepped in puddle
+						if (storyIndex == 93) {
+								storyIndex = 94;
+								text = story [storyIndex];
+								other.collider2D.enabled = false;
+								pause = true;
+						} else {
+								storyIndex = 59;
+								text = story [storyIndex];
+								pause = true;
+						}
 				} else if (other.tag == "Brother") {
 						if ((int)decisions [0] == 0 && storyIndex == 11) {
 								//mom comes in while trying to walk out of door with toy
@@ -752,10 +822,10 @@ public class Player : MonoBehaviour
 								pause = true;
 								prompting = false;
 						}
-		} else if(other.tag=="Desk"&&storyIndex == 64){
-			//sit down at desk
-			storyIndex = 65;
-			text = story[storyIndex];
-		}
+				} else if (other.tag == "Desk" && storyIndex == 64) {
+						//sit down at desk
+						storyIndex = 65;
+						text = story [storyIndex];
+				}
 		}
 }
