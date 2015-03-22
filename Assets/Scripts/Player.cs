@@ -29,9 +29,6 @@ public class Player : MonoBehaviour
 				layerMask = ~layerMask;
 				scale = new Vector3 (Screen.width / width, Screen.height / height, 1);
 		style = new GUIStyle ();
-		decisions.Add(action);
-		decisions.Add(2);
-		decisions.Add(action);
 		changeLevel (Application.loadedLevel);
 		next ();
 		}
@@ -74,7 +71,7 @@ public class Player : MonoBehaviour
 		}
 	
 		void changeAppearance (int i)
-		{
+	{
 				personality += i;
 		if(personality==-1){
 			personality = 0;
@@ -177,7 +174,7 @@ public class Player : MonoBehaviour
 								text = story [storyIndex];
 						} else if ((int)decisions [2] == 2) {
 								//will help him, but he cant copy
-								changeAppearance (1);
+				changeAppearance (1);
 								storyIndex = 53;
 								text = story [storyIndex];
 						}
@@ -214,11 +211,13 @@ public class Player : MonoBehaviour
 								GameObject.FindWithTag ("Cat").GetComponent<SpriteRenderer> ().enabled = true;
 						}
 				}
+		/*
 				if (Input.GetKeyDown (KeyCode.A)) {
 						Application.LoadLevel (Application.loadedLevel + 1);
 						changeLevel (Application.loadedLevel + 1);
 						command = "";
 				}
+		*/
 				if (Input.GetKeyDown (KeyCode.Q)) {
 						Application.Quit ();
 				}
