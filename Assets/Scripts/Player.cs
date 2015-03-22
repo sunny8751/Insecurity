@@ -74,6 +74,12 @@ public class Player : MonoBehaviour
 		void changeAppearance (int i)
 		{
 				personality += i;
+		if(personality==-1){
+			personality = 0;
+		}
+		if(personality == 7){
+			personality = 6;
+		}
 		anim.SetInteger ("Character", personality);
 		//create poof
 		Instantiate((GameObject) Resources.Load("Poof"), transform.position, Quaternion.identity);
