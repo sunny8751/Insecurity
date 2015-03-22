@@ -27,8 +27,10 @@ public class Player : MonoBehaviour
 				playerSizeY = GetComponent<SpriteRenderer> ().sprite.bounds.size.y * transform.localScale.y;
 				layerMask = ~layerMask;
 				scale = new Vector3 (Screen.width / width, Screen.height / height, 1);
-				style = new GUIStyle ();
-				//decisions.Add(action);
+		style = new GUIStyle ();
+		decisions.Add(action);
+		decisions.Add(action);
+		decisions.Add(action);
 		changeLevel (Application.loadedLevel);
 				Debug.Log ("crying");
 				StartCoroutine ("Wait", .5f);
@@ -43,7 +45,8 @@ public class Player : MonoBehaviour
 		}
 
 		public void next ()
-		{
+	{
+		anim.SetBool ("Walking", false);
 				storyIndex++;
 				text = story [storyIndex];
 				if (text == "italics") {
@@ -748,6 +751,7 @@ public class Player : MonoBehaviour
 		{
 				float time = 0;
 				Transform bullyT = GameObject.FindWithTag ("Bully").transform;
+		bullyT.GetComponent<Animator>().SetBool("Walking", true);
 				if (storyIndex == 116) {
 						GameObject.FindWithTag ("Bully").transform.localRotation = Quaternion.Euler (new Vector3 (0, 180, 0));
 						transform.localRotation = Quaternion.Euler (new Vector3 (0, 0, 0));
@@ -758,8 +762,9 @@ public class Player : MonoBehaviour
 						bullyT.position = new Vector3 (pos, -2.59f, 0);
 						time += Time.deltaTime;
 						yield return new WaitForEndOfFrame ();
-				}
-				if (storyIndex == 116) {
+		}
+		bullyT.GetComponent<Animator>().SetBool("Walking", false);
+		if (storyIndex == 116) {
 						next ();
 				} else {
 						//bully done approaching you
@@ -847,7 +852,8 @@ public class Player : MonoBehaviour
 						}
 				} else if (other.tag == "Brother") {
 						if ((int)decisions [0] == 0 && storyIndex == 11) {
-								//mom comes in while trying to walk out of door with toy
+				//mom comes in while trying to walk out of door with toy
+				anim.SetBool ("Walking", false);
 								GameObject.FindWithTag ("Mom").GetComponent<SpriteRenderer> ().enabled = true;
 								storyIndex = 16;
 								text = story [storyIndex];
