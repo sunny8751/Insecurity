@@ -26,7 +26,9 @@ public class Ending : MonoBehaviour
 			StartCoroutine("Move");
 		}else if(stage == 4){
 				stage ++;
-		}
+		}else if(stage == 5){
+				Application.Quit();
+				}
 	}
 		if (Input.GetKeyDown (KeyCode.Q)) {
 			Application.Quit ();
