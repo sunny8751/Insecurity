@@ -10,7 +10,7 @@ public class Clothes : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		//jumped on clothes
-		if(other.rigidbody2D.velocity.y<0){
+		if(other.GetComponent<Rigidbody2D>().velocity.y<0){
 		counter++;
 			//instantiate poof
 			Instantiate((GameObject)Resources.Load("ClothesPoof"), transform.position, Quaternion.identity);

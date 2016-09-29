@@ -92,25 +92,25 @@ public class Player : MonoBehaviour
 				transform.position = new Vector3 (transform.position.x, transform.position.y + dy, 0);
 		if(personality == 6){
 			transform.GetComponent<BoxCollider2D>().size = new Vector2(1.76f, 5.17f);
-			transform.GetComponent<BoxCollider2D>().center = new Vector2(-.65f, 0.02f);
+			transform.GetComponent<BoxCollider2D>().offset = new Vector2(-.65f, 0.02f);
 		} else if(personality == 5){
 			transform.GetComponent<BoxCollider2D>().size = new Vector2(2.12f, 5.17f);
-			transform.GetComponent<BoxCollider2D>().center = new Vector2(-0.17f, -.08f);
+			transform.GetComponent<BoxCollider2D>().offset = new Vector2(-0.17f, -.08f);
 		}else if(personality == 4){
 			transform.GetComponent<BoxCollider2D>().size = new Vector2(2.22f, 5.29f);
-			transform.GetComponent<BoxCollider2D>().center = new Vector2(0f, -0.12f);
+			transform.GetComponent<BoxCollider2D>().offset = new Vector2(0f, -0.12f);
 		}else if(personality == 3){
 			transform.GetComponent<BoxCollider2D>().size = new Vector2(2.87f, 4.87f);
-			transform.GetComponent<BoxCollider2D>().center = new Vector2(0f, 0f);
+			transform.GetComponent<BoxCollider2D>().offset = new Vector2(0f, 0f);
 		}else if(personality == 2){
 			transform.GetComponent<BoxCollider2D>().size = new Vector2(2.66f, 6.27f);
-			transform.GetComponent<BoxCollider2D>().center = new Vector2(-.48f, 0f);
+			transform.GetComponent<BoxCollider2D>().offset = new Vector2(-.48f, 0f);
 		}else if(personality == 1){
 			transform.GetComponent<BoxCollider2D>().size = new Vector2(2.87f, 6.43f);
-			transform.GetComponent<BoxCollider2D>().center = new Vector2(-.42f, 0.1f);
+			transform.GetComponent<BoxCollider2D>().offset = new Vector2(-.42f, 0.1f);
 		}else if (personality==0){
 			transform.GetComponent<BoxCollider2D>().size = new Vector2(3.41f, 8.57f);
-			transform.GetComponent<BoxCollider2D>().center = new Vector2(-1.55f, -.21f);
+			transform.GetComponent<BoxCollider2D>().offset = new Vector2(-1.55f, -.21f);
 		}
 		}
 
@@ -600,8 +600,8 @@ public class Player : MonoBehaviour
 				// player wants to jump
 				if (Input.GetKeyDown (KeyCode.Space) && checkGrounded ()) {
 						//check to see if the player is on the ground, then jump
-						rigidbody2D.velocity = Vector2.zero;
-						rigidbody2D.AddForce (Vector2.up * jumpSpeed);
+						GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+						GetComponent<Rigidbody2D>().AddForce (Vector2.up * jumpSpeed);
 				}
 				//commands
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
@@ -847,7 +847,7 @@ public class Player : MonoBehaviour
 						if (storyIndex == 93) {
 								storyIndex = 94;
 								text = story [storyIndex];
-								other.collider2D.enabled = false;
+								other.GetComponent<Collider2D>().enabled = false;
 								pause = true;
 						} else {
 								storyIndex = 59;
